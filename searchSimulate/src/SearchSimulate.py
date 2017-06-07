@@ -13,21 +13,29 @@ import time
 
 
 def get_search_word(file_name):
-    # id, qid1, qid2, question1, question2, is_duplicate
+    # id, question1, question2
     with open(file_name) as fi:
+        cnt = 0
         for line in fi:
-            splited = line.split(",")
-            if len(splited) < 6:
+            splited = line.split(",\"")
+            if len(splited) < 3:
                 continue
-            conn = httplib.HTTPConnection('10.3.242.101')
-            conn.request('GET', 'result.html?input=' + splited[3])
+            if len(splited) > 3:
+                cnt += 1
+                print "Got " + str(cnt) + " irregular line."
+		print line
+                continue
+            conn = httplib.HTTPConnection('10.3.242.99')
+            conn.request('GET', 'result.html?input=' + splited[1])
             # time.sleep(5)
-            conn = httplib.HTTPConnection('10.3.242.101')
-            conn.request('GET', 'result.html?input=' + splited[4])
-            time.sleep(5)
+            conn = httplib.HTTPConnection('10.3.242.99')
+            conn.request('GET', 'result.html?input=' + splited[2])
+            time.sleep(0.0005)
 
 
 def search():
-    conn = httplib.HTTPConnection('10.3.242.101')
+    conn = httplib.HTTPConnection('10.3.242.99')
     word = 'test'
     conn.request('GET', 'result.html?input=' + word)
+
+get_search_word("test.csv")
